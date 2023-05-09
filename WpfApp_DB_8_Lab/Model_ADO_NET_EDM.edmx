@@ -1,0 +1,640 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище db_icv3Model" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Договоры">
+          <Key>
+            <PropertyRef Name="НомерДоговора" />
+          </Key>
+          <Property Name="НомерДоговора" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ДатаДоговора" Type="datetime" />
+          <Property Name="КодПоставщика" Type="int" Nullable="false" />
+          <Property Name="Комментарий" Type="text" />
+        </EntityType>
+        <EntityType Name="Поставлено">
+          <Key>
+            <PropertyRef Name="НомерДоговора" />
+            <PropertyRef Name="Товар" />
+          </Key>
+          <Property Name="НомерДоговора" Type="int" Nullable="false" />
+          <Property Name="Товар" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="Количество" Type="decimal" Precision="4" Scale="0" Nullable="false" />
+          <Property Name="Цена" Type="decimal" Precision="8" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Поставщики">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="КодПоставщика" Type="int" Nullable="false" />
+          <Property Name="Адрес" Type="text" Nullable="false" />
+          <Property Name="Примечание" Type="text" />
+        </EntityType>
+        <EntityType Name="ФизическиеЛица">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="КодПоставщика" Type="int" Nullable="false" />
+          <Property Name="Фамилия" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="Имя" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="Отчество" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="НомерСвидетельства" Type="char" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="ЮридическиеЛица">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="КодПоставщика" Type="int" Nullable="false" />
+          <Property Name="Названия" Type="char" MaxLength="20" Nullable="false" />
+          <Property Name="НалоговыйНомер" Type="char" MaxLength="20" />
+          <Property Name="НомерСвидетельства" Type="char" MaxLength="10" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "db_icv3.dbo.View_1" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="View_1">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+            <PropertyRef Name="НомерДоговора" />
+          </Key>
+          <Property Name="КодПоставщика" Type="int" Nullable="false" />
+          <Property Name="ДатаДоговора" Type="datetime" />
+          <Property Name="НомерДоговора" Type="int" Nullable="false" />
+          <Property Name="Поставщик" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "db_icv3.dbo.View_2" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="View_2">
+          <Key>
+            <PropertyRef Name="Адрес" />
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="Адрес" Type="text" Nullable="false" />
+          <Property Name="КодПоставщика" Type="int" Nullable="false" />
+          <Property Name="Названия" Type="char" MaxLength="20" />
+          <Property Name="Фамилия" Type="char" MaxLength="20" />
+          <Property Name="Имя" Type="char" MaxLength="20" />
+          <Property Name="Отчество" Type="char" MaxLength="20" />
+          <Property Name="Expr1" Type="int" />
+        </EntityType>
+        <Association Name="FK__Договоры__Коммен__3F466844">
+          <End Role="Поставщики" Type="Self.Поставщики" Multiplicity="1" />
+          <End Role="Договоры" Type="Self.Договоры" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Поставщики">
+              <PropertyRef Name="КодПоставщика" />
+            </Principal>
+            <Dependent Role="Договоры">
+              <PropertyRef Name="КодПоставщика" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Поставлено__Цена__440B1D61">
+          <End Role="Договоры" Type="Self.Договоры" Multiplicity="1" />
+          <End Role="Поставлено" Type="Self.Поставлено" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Договоры">
+              <PropertyRef Name="НомерДоговора" />
+            </Principal>
+            <Dependent Role="Поставлено">
+              <PropertyRef Name="НомерДоговора" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Физически__Номер__398D8EEE">
+          <End Role="Поставщики" Type="Self.Поставщики" Multiplicity="1" />
+          <End Role="ФизическиеЛица" Type="Self.ФизическиеЛица" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Поставщики">
+              <PropertyRef Name="КодПоставщика" />
+            </Principal>
+            <Dependent Role="ФизическиеЛица">
+              <PropertyRef Name="КодПоставщика" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Юридическ__Номер__3C69FB99">
+          <End Role="Поставщики" Type="Self.Поставщики" Multiplicity="1" />
+          <End Role="ЮридическиеЛица" Type="Self.ЮридическиеЛица" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Поставщики">
+              <PropertyRef Name="КодПоставщика" />
+            </Principal>
+            <Dependent Role="ЮридическиеЛица">
+              <PropertyRef Name="КодПоставщика" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dgvr_arg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="var1" Type="datetime" Mode="In" />
+          <Parameter Name="var2" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_dgvr_mdf" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Action" Type="char" Mode="In" />
+          <Parameter Name="nom_dgvr" Type="int" Mode="In" />
+          <Parameter Name="dgvr_date" Type="datetime" Mode="In" />
+          <Parameter Name="dgvr_kod_post" Type="int" Mode="In" />
+          <Parameter Name="dgvr_comment" Type="text" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_Договоры" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="Хранилище db_icv3ModelContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Договоры" EntityType="Self.Договоры" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Поставлено" EntityType="Self.Поставлено" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Поставщики" EntityType="Self.Поставщики" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ФизическиеЛица" EntityType="Self.ФизическиеЛица" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ЮридическиеЛица" EntityType="Self.ЮридическиеЛица" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="View_1" EntityType="Self.View_1" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[View_1].[КодПоставщика] AS [КодПоставщика], 
+[View_1].[ДатаДоговора] AS [ДатаДоговора], 
+[View_1].[НомерДоговора] AS [НомерДоговора], 
+[View_1].[Поставщик] AS [Поставщик]
+FROM [dbo].[View_1] AS [View_1]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_2" EntityType="Self.View_2" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[View_2].[Адрес] AS [Адрес], 
+[View_2].[КодПоставщика] AS [КодПоставщика], 
+[View_2].[Названия] AS [Названия], 
+[View_2].[Фамилия] AS [Фамилия], 
+[View_2].[Имя] AS [Имя], 
+[View_2].[Отчество] AS [Отчество], 
+[View_2].[Expr1] AS [Expr1]
+FROM [dbo].[View_2] AS [View_2]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__Договоры__Коммен__3F466844" Association="Self.FK__Договоры__Коммен__3F466844">
+            <End Role="Поставщики" EntitySet="Поставщики" />
+            <End Role="Договоры" EntitySet="Договоры" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Поставлено__Цена__440B1D61" Association="Self.FK__Поставлено__Цена__440B1D61">
+            <End Role="Договоры" EntitySet="Договоры" />
+            <End Role="Поставлено" EntitySet="Поставлено" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Физически__Номер__398D8EEE" Association="Self.FK__Физически__Номер__398D8EEE">
+            <End Role="Поставщики" EntitySet="Поставщики" />
+            <End Role="ФизическиеЛица" EntitySet="ФизическиеЛица" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Юридическ__Номер__3C69FB99" Association="Self.FK__Юридическ__Номер__3C69FB99">
+            <End Role="Поставщики" EntitySet="Поставщики" />
+            <End Role="ЮридическиеЛица" EntitySet="ЮридическиеЛица" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="db_icv3Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Договоры">
+          <Key>
+            <PropertyRef Name="НомерДоговора" />
+          </Key>
+          <Property Name="НомерДоговора" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ДатаДоговора" Type="DateTime" Precision="3" />
+          <Property Name="КодПоставщика" Type="Int32" Nullable="false" />
+          <Property Name="Комментарий" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Поставщики" Relationship="Self.FK__Договоры__Коммен__3F466844" FromRole="Договоры" ToRole="Поставщики" />
+          <NavigationProperty Name="Поставлено" Relationship="Self.FK__Поставлено__Цена__440B1D61" FromRole="Договоры" ToRole="Поставлено" />
+        </EntityType>
+        <EntityType Name="Поставлено">
+          <Key>
+            <PropertyRef Name="НомерДоговора" />
+            <PropertyRef Name="Товар" />
+          </Key>
+          <Property Name="НомерДоговора" Type="Int32" Nullable="false" />
+          <Property Name="Товар" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Количество" Type="Decimal" Precision="4" Scale="0" Nullable="false" />
+          <Property Name="Цена" Type="Decimal" Precision="8" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Договоры" Relationship="Self.FK__Поставлено__Цена__440B1D61" FromRole="Поставлено" ToRole="Договоры" />
+        </EntityType>
+        <EntityType Name="Поставщики">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="КодПоставщика" Type="Int32" Nullable="false" />
+          <Property Name="Адрес" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Примечание" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Договоры" Relationship="Self.FK__Договоры__Коммен__3F466844" FromRole="Поставщики" ToRole="Договоры" />
+          <NavigationProperty Name="ФизическиеЛица" Relationship="Self.FK__Физически__Номер__398D8EEE" FromRole="Поставщики" ToRole="ФизическиеЛица" />
+          <NavigationProperty Name="ЮридическиеЛица" Relationship="Self.FK__Юридическ__Номер__3C69FB99" FromRole="Поставщики" ToRole="ЮридическиеЛица" />
+        </EntityType>
+        <EntityType Name="ФизическиеЛица">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="КодПоставщика" Type="Int32" Nullable="false" />
+          <Property Name="Фамилия" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Имя" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Отчество" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="НомерСвидетельства" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Поставщики" Relationship="Self.FK__Физически__Номер__398D8EEE" FromRole="ФизическиеЛица" ToRole="Поставщики" />
+        </EntityType>
+        <EntityType Name="ЮридическиеЛица">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="КодПоставщика" Type="Int32" Nullable="false" />
+          <Property Name="Названия" Type="String" MaxLength="20" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="НалоговыйНомер" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="НомерСвидетельства" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Поставщики" Relationship="Self.FK__Юридическ__Номер__3C69FB99" FromRole="ЮридическиеЛица" ToRole="Поставщики" />
+        </EntityType>
+        <EntityType Name="View_1">
+          <Key>
+            <PropertyRef Name="КодПоставщика" />
+            <PropertyRef Name="НомерДоговора" />
+          </Key>
+          <Property Name="КодПоставщика" Type="Int32" Nullable="false" />
+          <Property Name="ДатаДоговора" Type="DateTime" Precision="3" />
+          <Property Name="НомерДоговора" Type="Int32" Nullable="false" />
+          <Property Name="Поставщик" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="View_2">
+          <Key>
+            <PropertyRef Name="Адрес" />
+            <PropertyRef Name="КодПоставщика" />
+          </Key>
+          <Property Name="Адрес" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="КодПоставщика" Type="Int32" Nullable="false" />
+          <Property Name="Названия" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Фамилия" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Имя" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Отчество" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+          <Property Name="Expr1" Type="Int32" />
+        </EntityType>
+        <Association Name="FK__Договоры__Коммен__3F466844">
+          <End Role="Поставщики" Type="Self.Поставщики" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Договоры" Type="Self.Договоры" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Поставщики">
+              <PropertyRef Name="КодПоставщика" />
+            </Principal>
+            <Dependent Role="Договоры">
+              <PropertyRef Name="КодПоставщика" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Поставлено__Цена__440B1D61">
+          <End Role="Договоры" Type="Self.Договоры" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Поставлено" Type="Self.Поставлено" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Договоры">
+              <PropertyRef Name="НомерДоговора" />
+            </Principal>
+            <Dependent Role="Поставлено">
+              <PropertyRef Name="НомерДоговора" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Физически__Номер__398D8EEE">
+          <End Role="Поставщики" Type="Self.Поставщики" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ФизическиеЛица" Type="Self.ФизическиеЛица" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Поставщики">
+              <PropertyRef Name="КодПоставщика" />
+            </Principal>
+            <Dependent Role="ФизическиеЛица">
+              <PropertyRef Name="КодПоставщика" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Юридическ__Номер__3C69FB99">
+          <End Role="Поставщики" Type="Self.Поставщики" Multiplicity="1" >
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ЮридическиеЛица" Type="Self.ЮридическиеЛица" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Поставщики">
+              <PropertyRef Name="КодПоставщика" />
+            </Principal>
+            <Dependent Role="ЮридическиеЛица">
+              <PropertyRef Name="КодПоставщика" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="db_icv3Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Договоры" EntityType="Self.Договоры" />
+          <EntitySet Name="Поставлено" EntityType="Self.Поставлено" />
+          <EntitySet Name="Поставщики" EntityType="Self.Поставщики" />
+          <EntitySet Name="ФизическиеЛица" EntityType="Self.ФизическиеЛица" />
+          <EntitySet Name="ЮридическиеЛица" EntityType="Self.ЮридическиеЛица" />
+          <EntitySet Name="View_1" EntityType="Self.View_1" />
+          <EntitySet Name="View_2" EntityType="Self.View_2" />
+          <AssociationSet Name="FK__Договоры__Коммен__3F466844" Association="Self.FK__Договоры__Коммен__3F466844">
+            <End Role="Поставщики" EntitySet="Поставщики" />
+            <End Role="Договоры" EntitySet="Договоры" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Поставлено__Цена__440B1D61" Association="Self.FK__Поставлено__Цена__440B1D61">
+            <End Role="Договоры" EntitySet="Договоры" />
+            <End Role="Поставлено" EntitySet="Поставлено" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Физически__Номер__398D8EEE" Association="Self.FK__Физически__Номер__398D8EEE">
+            <End Role="Поставщики" EntitySet="Поставщики" />
+            <End Role="ФизическиеЛица" EntitySet="ФизическиеЛица" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Юридическ__Номер__3C69FB99" Association="Self.FK__Юридическ__Номер__3C69FB99">
+            <End Role="Поставщики" EntitySet="Поставщики" />
+            <End Role="ЮридическиеЛица" EntitySet="ЮридическиеЛица" />
+          </AssociationSet>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dgvr_arg" ReturnType="Collection(db_icv3Model.sp_dgvr_arg_Result)">
+            <Parameter Name="var1" Mode="In" Type="DateTime" />
+            <Parameter Name="var2" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dgvr_mdf">
+            <Parameter Name="Action" Mode="In" Type="String" />
+            <Parameter Name="nom_dgvr" Mode="In" Type="Int32" />
+            <Parameter Name="dgvr_date" Mode="In" Type="DateTime" />
+            <Parameter Name="dgvr_kod_post" Mode="In" Type="Int32" />
+            <Parameter Name="dgvr_comment" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(db_icv3Model.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(db_icv3Model.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="sp_Договоры" ReturnType="Collection(db_icv3Model.sp_Договоры_Result)" />
+        </EntityContainer>
+        <ComplexType Name="sp_dgvr_arg_Result">
+          <Property Type="Int32" Name="НомерДоговора" Nullable="false" />
+          <Property Type="DateTime" Name="ДатаДоговора" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="Column1" Nullable="true" Precision="38" Scale="0" />
+          <Property Type="Decimal" Name="Column2" Nullable="true" Precision="38" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="sp_Договоры_Result">
+          <Property Type="Int32" Name="НомерДоговора" Nullable="false" />
+          <Property Type="DateTime" Name="ДатаДоговора" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="КодПоставщика" Nullable="false" />
+          <Property Type="String" Name="Комментарий" Nullable="true" MaxLength="Max" />
+          <Property Type="Int32" Name="КодПоставщика1" Nullable="true" />
+          <Property Type="String" Name="Названия" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="НалоговыйНомер" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="НомерСвидетельства" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="КодПоставщика2" Nullable="true" />
+          <Property Type="String" Name="Фамилия" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Имя" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Отчество" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="НомерСвидетельства1" Nullable="true" MaxLength="10" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище db_icv3ModelContainer" CdmEntityContainer="db_icv3Entities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="db_icv3Model.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Договоры">
+            <EntityTypeMapping TypeName="db_icv3Model.Договоры">
+              <MappingFragment StoreEntitySet="Договоры">
+                <ScalarProperty Name="НомерДоговора" ColumnName="НомерДоговора" />
+                <ScalarProperty Name="ДатаДоговора" ColumnName="ДатаДоговора" />
+                <ScalarProperty Name="КодПоставщика" ColumnName="КодПоставщика" />
+                <ScalarProperty Name="Комментарий" ColumnName="Комментарий" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Поставлено">
+            <EntityTypeMapping TypeName="db_icv3Model.Поставлено">
+              <MappingFragment StoreEntitySet="Поставлено">
+                <ScalarProperty Name="НомерДоговора" ColumnName="НомерДоговора" />
+                <ScalarProperty Name="Товар" ColumnName="Товар" />
+                <ScalarProperty Name="Количество" ColumnName="Количество" />
+                <ScalarProperty Name="Цена" ColumnName="Цена" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Поставщики">
+            <EntityTypeMapping TypeName="db_icv3Model.Поставщики">
+              <MappingFragment StoreEntitySet="Поставщики">
+                <ScalarProperty Name="КодПоставщика" ColumnName="КодПоставщика" />
+                <ScalarProperty Name="Адрес" ColumnName="Адрес" />
+                <ScalarProperty Name="Примечание" ColumnName="Примечание" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ФизическиеЛица">
+            <EntityTypeMapping TypeName="db_icv3Model.ФизическиеЛица">
+              <MappingFragment StoreEntitySet="ФизическиеЛица">
+                <ScalarProperty Name="КодПоставщика" ColumnName="КодПоставщика" />
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="НомерСвидетельства" ColumnName="НомерСвидетельства" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ЮридическиеЛица">
+            <EntityTypeMapping TypeName="db_icv3Model.ЮридическиеЛица">
+              <MappingFragment StoreEntitySet="ЮридическиеЛица">
+                <ScalarProperty Name="КодПоставщика" ColumnName="КодПоставщика" />
+                <ScalarProperty Name="Названия" ColumnName="Названия" />
+                <ScalarProperty Name="НалоговыйНомер" ColumnName="НалоговыйНомер" />
+                <ScalarProperty Name="НомерСвидетельства" ColumnName="НомерСвидетельства" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_1">
+            <EntityTypeMapping TypeName="db_icv3Model.View_1">
+              <MappingFragment StoreEntitySet="View_1">
+                <ScalarProperty Name="КодПоставщика" ColumnName="КодПоставщика" />
+                <ScalarProperty Name="ДатаДоговора" ColumnName="ДатаДоговора" />
+                <ScalarProperty Name="НомерДоговора" ColumnName="НомерДоговора" />
+                <ScalarProperty Name="Поставщик" ColumnName="Поставщик" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_2">
+            <EntityTypeMapping TypeName="db_icv3Model.View_2">
+              <MappingFragment StoreEntitySet="View_2">
+                <ScalarProperty Name="Адрес" ColumnName="Адрес" />
+                <ScalarProperty Name="КодПоставщика" ColumnName="КодПоставщика" />
+                <ScalarProperty Name="Названия" ColumnName="Названия" />
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="Expr1" ColumnName="Expr1" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="Хранилище db_icv3Model.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="Хранилище db_icv3Model.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dgvr_arg" FunctionName="Хранилище db_icv3Model.sp_dgvr_arg">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="db_icv3Model.sp_dgvr_arg_Result">
+                <ScalarProperty Name="НомерДоговора" ColumnName="НомерДоговора" />
+                <ScalarProperty Name="ДатаДоговора" ColumnName="ДатаДоговора" />
+                <ScalarProperty Name="Column1" ColumnName="Column1" />
+                <ScalarProperty Name="Column2" ColumnName="Column2" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_dgvr_mdf" FunctionName="Хранилище db_icv3Model.sp_dgvr_mdf" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="Хранилище db_icv3Model.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="Хранилище db_icv3Model.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="db_icv3Model.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="Хранилище db_icv3Model.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="db_icv3Model.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="Хранилище db_icv3Model.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="Хранилище db_icv3Model.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="sp_Договоры" FunctionName="Хранилище db_icv3Model.sp_Договоры">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="db_icv3Model.sp_Договоры_Result">
+                <ScalarProperty Name="НомерДоговора" ColumnName="НомерДоговора" />
+                <ScalarProperty Name="ДатаДоговора" ColumnName="ДатаДоговора" />
+                <ScalarProperty Name="КодПоставщика" ColumnName="КодПоставщика" />
+                <ScalarProperty Name="Комментарий" ColumnName="Комментарий" />
+                <ScalarProperty Name="КодПоставщика1" ColumnName="КодПоставщика1" />
+                <ScalarProperty Name="Названия" ColumnName="Названия" />
+                <ScalarProperty Name="НалоговыйНомер" ColumnName="НалоговыйНомер" />
+                <ScalarProperty Name="НомерСвидетельства" ColumnName="НомерСвидетельства" />
+                <ScalarProperty Name="КодПоставщика2" ColumnName="КодПоставщика2" />
+                <ScalarProperty Name="Фамилия" ColumnName="Фамилия" />
+                <ScalarProperty Name="Имя" ColumnName="Имя" />
+                <ScalarProperty Name="Отчество" ColumnName="Отчество" />
+                <ScalarProperty Name="НомерСвидетельства1" ColumnName="НомерСвидетельства1" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
